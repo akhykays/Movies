@@ -1,0 +1,57 @@
+## .NET / Visual Studio
+
+# Build results
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+x64/
+x86/
+[Ll]og/
+[Ll]ogs/
+
+# Visual Studio files
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Rider
+.idea/
+
+# VS Code
+.vscode/
+
+# NuGet
+*.nupkg
+*.snupkg
+**/[Pp]ackages/*
+!**/[Pp]ackages/build/
+*.nuget.props
+*.nuget.targets
+
+# Publish output
+[Pp]ublish/
+*.Publish.xml
+*.pubxml
+*.pubxml.user
+*.azurePubxml
+
+# ASP.NET Core (secrets locaux uniquement, pas les appsettings*.json versionnés)
+appsettings.Local.json
+secrets.json
+
+# Test results
+[Tt]est[Rr]esult*/
+*.trx
+*.coverage
+*.coveragexml
+
+# Others
+*.DotSettings.user
+*.psess
+*.vsp
+*.vspx
+*.sap
