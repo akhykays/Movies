@@ -1,4 +1,6 @@
-﻿using Movies.DTOs;
+﻿using Microsoft.EntityFrameworkCore;
+using Movies.DTOs;
+using Movies.Models;
 using Movies.Persistance;
 
 namespace Movies.Services;
@@ -14,29 +16,91 @@ public class MovieService : IMovieService
         _logger = logger;
     }
 
-    public Task<MovieDto> CreateMovieAsync(CreateMovieDto createMovieDto)
+    public async Task<MovieDto> CreateMovieAsync(CreateMovieDto createMovieDto)
     {
-        throw new NotImplementedException();
+        var movie = Movie.Create(
+            createMovieDto.Title,
+            createMovieDto.Genre,
+            createMovieDto.ReleaseDate,
+            createMovieDto.Rating
+        );
+
+        await _dbContext.AddAsync(movie);
+        await _dbContext.SaveChangesAsync();
+
+        return new MovieDto(
+            movie.Id,
+            movie.Title,
+            movie.Genre,
+            movie.ReleaseDate,
+            movie.Rating
+            );
     }
 
-    public Task DeleteMovieByIdAsync(Guid id)
+    public async Task DeleteMovieByIdAsync(Guid id)
     {
-        throw new NotImplementedException();
+        var movie = await _dbContext.Movies
+                            .FirstOrDefaultAsync(m => m.Id == id);
+
+        if (movie is not null)
+        {
+            _dbContext.Movies.Remove(movie);
+            await _dbContext.SaveChangesAsync();
+        }
     }
 
-    public Task<IEnumerable<MovieDto>> GetAllMoviesAsync()
+    public async Task<IEnumerable<MovieDto>> GetAllMoviesAsync()
     {
-        throw new NotImplementedException();
+        return await _dbContext.Movies
+                        .AsNoTracking()
+            .Select(m => new MovieDto(
+                m.Id,
+                m.Title,
+                m.Genre,
+                m.ReleaseDate,
+                m.Rating
+            ))
+            .ToListAsync();
     }
 
-    public Task<MovieDto?> GetMovieByIdAsync(Guid id)
+    public async Task<MovieDto?> GetMovieByIdAsync(Guid id)
     {
-        throw new NotImplementedException();
+        var movie = _dbContext.Movies
+                        .AsNoTracking()
+                        .FirstOrDefault(m => m.Id == id);
+
+        if (movie is null)
+        {
+            return null;
+        }
+
+        return new MovieDto(
+            movie.Id,
+            movie.Title,
+            movie.Genre,
+            movie.ReleaseDate,
+            movie.Rating
+        );
     }
 
-    public Task UpdateMovieAsync(Guid id, UpdateMovieDto command)
+    public async Task UpdateMovieAsync(Guid id, UpdateMovieDto command)
     {
-        throw new NotImplementedException();
+        var movie = await _dbContext.Movies
+                            .FirstOrDefaultAsync(m => m.Id == id);
+
+        if (movie is null)
+        {
+            throw new NullReferenceException($"Movie with id {id} not found.");
+        }
+
+        movie.Update(
+            command.Title,
+            command.Genre,
+            command.ReleaseDate,
+            command.Rating);
+
+        _dbContext.Movies.Update(movie);
+        await _dbContext.SaveChangesAsync();
     }
 }
 
