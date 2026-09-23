@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
+using Movies.Endpoints;
 using Movies.Persistance;
+using Movies.Services;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,7 +13,7 @@ builder.Services.AddDbContext<MovieDbContext>(options =>
             options.UseNpgsql(connectionString);
         });
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+builder.Services.AddTransient<IMovieService, MovieService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
@@ -25,8 +27,6 @@ await using (var dbContext = serviceScope.ServiceProvider.GetRequiredService<Mov
     await dbContext.Database.EnsureCreatedAsync();
 }
 
-app.MapGet("/", () => "Hello World!");
-
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -39,5 +39,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapMovieEndpoints();
 
 app.Run();
