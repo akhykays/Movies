@@ -8,7 +8,7 @@ public static class MovieEndpoints
     public static void MapMovieEndpoints(this IEndpointRouteBuilder routes)
     {
 
-        var movieApi = routes.MapGroup("/api/movies").WithTags("Movies");
+        var movieApi = routes.MapGroup("/api").WithTags("Movies");
 
         movieApi.MapGet("/movies", async (IMovieService movieService) =>
         {
