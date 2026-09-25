@@ -2,9 +2,6 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net10.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
     <AspireUseCliBundle>true</AspireUseCliBundle>
     <UserSecretsId>990c5dcc-eda2-4a5f-83b8-902c7d5a27a2</UserSecretsId>
   </PropertyGroup>
